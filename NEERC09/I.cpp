@@ -74,10 +74,10 @@ template <typename T> struct Dinic
         memset (elast, -1, V * sizeof (int));
     }
 	
-	vector<map<int,int>> getEdges(){
+	vector<map<int,int> > getEdges(){
 		int num = idx(n-1)+1;
 
-		vector<map<int,int>> res(num);
+		vector<map<int,int> > res(num);
 		rep(i,num){
 			for(int e = elast[i]; e!=-1; e = eprev[e]){
 				int v = eorig[e] - ecap[e];
@@ -172,7 +172,8 @@ vector<vector<int> > adj(n);
 int doit(int m){
 	dinic.init(idx(n-1) + 1);
 	rep(from, n){
-		for(int to : adj[from]){
+		foreach(it, adj[from]){
+			int to = *it;
 			dinic.addedge(idx(from), idx(to), BIG, 0, true);
 
 			dinic.addedge(SOURCE, idx(to), 1, 0);
@@ -193,19 +194,19 @@ int doit(int m){
 
 void dfs(int at, vector<map<int,int> >& adj, vector<int>& path){
 	path.pb(at);
-	for(auto& it : adj[at]) if(it.S > 0){
-		it.S--;
-		dfs(it.F, adj, path);
+	foreach(it, adj[at]) if(it->S > 0){
+		it->S--;
+		dfs(it->F, adj, path);
 		return;
 	}
-	assert(at == EXIT);
+	//assert(at == EXIT);
 }
 
 
 int main(){
 	cin>>n;
 
-	adj = vector<vector<int>>(n);
+	adj = vector<vector<int> >(n);
 	int nedge = 0;
 	rep(i,n){
 		int t; cin>>t;
@@ -217,7 +218,7 @@ int main(){
 		}
 	}
 
-	int a = 0, b = n;
+	int a = 0, b = nedge;
 	while(a != b){
 		int m = (a+b)/2;
 
@@ -230,11 +231,11 @@ int main(){
 	}
 
 	doit(a);
-	auto edge = dinic.getEdges();
+	vector<map<int,int> > edge = dinic.getEdges();
 
 	rep(from, n)
-		for(int to : adj[from])
-			edge[idx(from)][idx(to)]++;
+		foreach(to, adj[from])
+			edge[idx(from)][idx(*to)]++;
 
 	cout << a << endl;
 	rep(i,a){
