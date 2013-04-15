@@ -35,11 +35,41 @@ using namespace std;
 #define F first
 #define S second
 
-typedef vector<int> Vi;
-typedef vector<vector<int> > Vvi;
-typedef vector<string> Vs;
-typedef pair<int, int> Pi;
+template<class T>
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
+template<class A, class B>
+ostream& operator<<(ostream& out, pair<A,B> p){
+	out << "<" << p.F << ", " << p.S << ">";
+	return out;
+}
+template<class T>
+ostream& operator<<(ostream& out, set<T> s){
+	out << "(";
+	foreach(it, s){
+		if(it != s.begin()) out << ", ";
+		out << *it;
+	}
+	out << ")";
+	return out;
+}
+template<class A, class B>
+ostream& operator<<(ostream& out, map<A,B> m){
+	out << "{";
+	foreach(it, m){
+		if(it != m.begin()) out << ", ";
+		out << *it;
+	}
+	out << "}";
 
+}
 
 int main(){
 }	
