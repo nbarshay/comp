@@ -44,14 +44,23 @@ const int n = 30000;
 
 const int q = 30000;
 
+int get(){
+	return (rand()%n) + 1;
+}
+
+const int block = 100;
+
 int main(){
 	cout << n << " " << (n-1) << endl;
-	For(i,1,n)
-		cout << i << " " << (i+1) << endl;
+	For(i,2,n+1){
+		cout << i << " " << i/2 << endl;
+	}
 
 	cout << q << endl;
-	rep(i,q){
-		cout << 0 << " " << ((rand()%n) + 1) << " " << ((rand()%n)+1) << endl;
+	rep(i,q/2){
+		cout << 0 << " " << get() << " " << get() << endl;
+
+		cout << 1 << " " << get() << " " << get() << endl;
 	}
 }	
 
