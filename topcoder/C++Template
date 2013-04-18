@@ -34,15 +34,8 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, vector<T> v){
-	out << "[";
-	rep(i, sz(v)){
-		if(i) out << ", ";
-		out << v[i];
-	}
-	out << "]";
-	return out;
-}
+ostream& operator<<(ostream& out, const vector<T>& vec);
+
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -66,7 +59,7 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-
+	return out;
 }
 
 struct $CLASSNAME${
