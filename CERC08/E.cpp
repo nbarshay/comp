@@ -55,6 +55,7 @@ int n;
 
 vector<bool> is_inf;
 vector<bool> does_vary;
+vector<bool> inf_vary;
 
 vector<int> mem;
 bool isStatic(int at){
@@ -68,10 +69,13 @@ bool isStatic(int at){
 		bool got_var = false;
 		for(char& c : str[at]){
 			if(is_inf[c]){
+				if(inf_vary[c])
+					got_var = true;
 				res = got_var ? 0 : 1;
 				break;
 			} else {
-				if(!isStatic(c)) got_var = true;
+				if(!isStatic(c)) 
+					got_var = true;
 			}
 		}
 	}
@@ -99,11 +103,27 @@ rep(tp,np){
 		if(adj[i][j] && adj[j][k])
 			adj[i][k] = true;
 	is_inf = vector<bool>(n, false);
-	does_vary = vector<bool>(n, false);
 
 	rep(i,n) rep(j,n) if(adj[i][j] && adj[j][i] && sz(str[j]) > 1)
 		is_inf[i] = true;
+	rep(i,n) rep(j,n) if(adj[i][j] && is_inf[j])
+		is_inf[i] = true;
 
+	vector<vector<bool> > inf(n, vector<bool>(n, false));
+	rep(i, n) if(is_inf[i]){
+		for(char& c : str[i]) if(is_inf[c]){
+			inf[i][c] = true;
+			break;
+		}
+	}
+
+	inf_vary = vector<bool>(n, false);
+	rep(i,n) rep(j,n) if(inf[i][j] && inf[j][i] && i != j)
+		inf_vary[i] = true;
+	rep(i,n) rep(j,n) if(inf[i][j] && inf_vary[j])
+		inf_vary[i] = true;
+
+	does_vary = vector<bool>(n, false);
 	rep(i,n) rep(j,n) if(adj[i][j] && adj[j][i] && i != j)
 		does_vary[i] = true;
 	rep(i,n) rep(j,n) if(does_vary[j] && adj[i][j])
