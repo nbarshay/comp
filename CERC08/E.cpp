@@ -39,6 +39,17 @@ typedef vector<vector<int> > VVI;
 typedef vector<string> VS;
 typedef pair<int, int> PI;
 
+template<class T>
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << " ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
+
 vector<string> str;
 int n;
 
@@ -56,12 +67,13 @@ bool isStatic(int at){
 	} else {
 		bool got_var = false;
 		for(char& c : str[at]){
-			if(is_inf[c])
+			if(is_inf[c]){
 				res = got_var ? 0 : 1;
-			else
+				break;
+			} else {
 				if(!isStatic(c)) got_var = true;
+			}
 		}
-		assert(false);
 	}
 	return res;
 }
@@ -70,18 +82,17 @@ int main(){
 int np; cin>>np;
 rep(tp,np){
 	cin >> n;
+	str = vector<string>(n);
 	rep(i,n){
-		string;
+		string s;
 		cin>>s;
 		for(char& c : s)
 			c -= 'a';
-		str.pb(s);
+		str[i] = s;
 	}
-	vector<vector<bool>> adj(n, vector<int>(n, false));
-	rep(i,n) 
-		adj[i][i] = true;
+	vector<vector<bool>> adj(n, vector<bool>(n, false));
 	rep(i,n){
-		for(char& c : s)
+		for(char& c : str[i])
 			adj[i][c] = true;
 	}
 	rep(j,n) rep(i,n) rep(k,n)
@@ -90,14 +101,18 @@ rep(tp,np){
 	is_inf = vector<bool>(n, false);
 	does_vary = vector<bool>(n, false);
 
-	rep(i,n) rep(j,n) if(adj[i][j] && adj[j][i] && sz(str[i]) > 0)
+	rep(i,n) rep(j,n) if(adj[i][j] && adj[j][i] && sz(str[j]) > 1)
 		is_inf[i] = true;
 
 	rep(i,n) rep(j,n) if(adj[i][j] && adj[j][i] && i != j)
 		does_vary[i] = true;
-	rep(i,n) rep(j,n) if(does_vary[j] && adj[i][k])
-		does_vary[j] = true;
+	rep(i,n) rep(j,n) if(does_vary[j] && adj[i][j])
+		does_vary[i] = true;
 
+	//cout << is_inf << endl;
+	//cout << does_vary << endl;
+
+	mem = vector<int>(n, -1);
 	cout << (isStatic(0) ? "YES" : "NO") << endl;	
 }
 }
