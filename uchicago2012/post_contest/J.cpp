@@ -71,12 +71,10 @@ ostream& operator<<(ostream& out, map<A,B> m){
 
 }
 
-struct Point3;
-ostream& operator<<(ostream& out, const Point3& p);
 
 struct Point3{
 	double x,y,z;
-	Point3(double _x, double _y, double _z) : x(_x), y(_x), z(_z) {}
+	Point3(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 	Point3 add(Point3 in){
 		return Point3(x + in.x, y + in.y, z + in.z);
 	}
@@ -90,7 +88,6 @@ struct Point3{
 		return sqrt(x*x + y*y + z*z);
 	}
 	Point3 unit(){
-		cout << (*this) << endl;
 		double s = len();
 		assert(s > 0);
 		return Point3(x/s, y/s, z/s);
@@ -98,7 +95,7 @@ struct Point3{
 	Point3 scale(double d){
 		return unit().mult(d);
 	}
-	double dot(Point3 in){
+	inline double dot(Point3 in){
 		return x*in.x + y*in.y + z*in.z;
 	}
 	Point3 cross(Point3 in){
@@ -124,33 +121,30 @@ while(1){
 		double x,y,z; cin>>x>>y>>z;
 		pts.pb(Point3(x,y,z));
 	}
-	vector<Point3> planes;
+	vector<double> A;
 	vector<double> bias;
+	set<set<int> > got;
 	rep(a_idx, n) For(b_idx,a_idx+1, n){
 		int c_idx;
 		for(c_idx = 0; c_idx == a_idx || c_idx == b_idx; c_idx++)
 			;
-		printf("%d %d %d\n", a_idx, b_idx, c_idx);
 		Point3 a = pts[a_idx], b = pts[b_idx], c = pts[c_idx];
 	
 		Point3 v1 = b.sub(a).unit();
 
 		Point3 v2 = c.sub(a);
-		cout << v2 << v1.scale(v2.dot(v1)) << endl;
 		v2 = v2.sub(v1.scale(v2.dot(v1))).unit();
 		assert(abs(v1.dot(v2)) < eps);
 		
-		Point3 v3 = v1.cross(v2);
-		assert(abs(v3.len() - 1.0) < eps);
 
 		double low=0.0, high=0.0;
 		int low_idx = -1, high_idx = -1;
 		rep(d_idx, n) if(d_idx != a_idx && d_idx != b_idx){
 			Point3 d = pts[d_idx];
 			Point3 v4 = d.sub(a);
-			v4 = v1.sub(v3.scale(v3.dot(v1))).unit();
-			assert(abs(v1.dot(v3)) < eps);
-			double val = v3.cross(v4).len();
+			v4 = v4.sub(v1.scale(v4.dot(v1))).unit();
+			assert(abs(v1.dot(v4)) < eps);
+			double val = v2.cross(v4).len();
 			if(val <= low){
 				low = val;
 				low_idx = d_idx;
@@ -162,22 +156,55 @@ while(1){
 		}
 		assert(low_idx != -1 && high_idx != -1);
 		rep(k,2){
-			Point3 p1 = a, p2 = b, p3 = k ? pts[low_idx] : pts[high_idx];
-			Point3 vec = p3.sub(p1).cross(p2.sub(p1)).unit();
+			rep(j,2){
+				int p3_idx = k ? low_idx : high_idx;
+				Point3 p1 = a, p2 = b, p3 = pts[p3_idx];
+				if(j)
+					swap(p2, p3);
 
-			planes.pb(vec);
-			bias.pb(-vec.dot(p1));
+				Point3 vec = p3.sub(p1).cross(p2.sub(p1)).unit();
+				double bia = -vec.dot(p1);
+
+				bool bad = false;
+				rep(i,n){
+					if(pts[i].dot(vec) + bia < -eps)
+						bad = true;
+				}
+
+				if(!bad){
+					set<int> cur;
+					cur.insert(a_idx); cur.insert(b_idx); cur.insert(p3_idx);
+					if(!got.count(cur)){
+						got.insert(cur);
+						A.pb(vec.x); A.pb(vec.y); A.pb(vec.z);
+						bias.pb(bia);
+					}
+				}
+			}
 		}
 	}
+
 	int nq; cin>>nq;
 	rep(tq, nq){
 		double x,y,z; cin>>x>>y>>z;
-		Point3 q = Point3(x,y,z);
 		double res = 1e10;
-		rep(k, sz(planes)){
-			double hit = abs(planes[k].dot(q) - bias[k]);
+		double* ptr1 = &(*A.begin());
+		double* ptr2 = &(*bias.begin());
+		double* ptr1e = &(*A.end());
+		while(ptr1 != ptr1e){
+			double a = *ptr1, b = *(ptr1+1), c = *(ptr1+2), bias = *ptr2;
+			double hit = x*a + y*b + z*c + bias;
+			ptr1 += 3;
+			ptr2 += 1;
 			res = min(res, hit);
 		}
+		/*
+		for(int i = 0; i < sz(bias); i++){
+			double hit = Point3(A[3*i], A[3*i +1], A[3*i+2]).dot(Point3(x,y,z)) + bias[i];
+			cout << hit << endl;
+			res = min(res, hit);
+		}
+		*/
 		cout << setprecision(4) << fixed << res << endl;
 	}
 }
