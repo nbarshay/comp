@@ -109,6 +109,19 @@ struct Card{
 	}
 };
 
+bool CardComp(const Card& a, const Card& b){
+	if(a.rank != b.rank)
+		return a.rank < b.rank;
+	else
+		return a.suite < b.suite;
+}
+
+struct HandComp{
+	bool operator() (const vector<Card>& a, const vector<Card>& b) const{
+		return lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), CardComp);
+	}
+};
+
 ostream& operator<<(ostream& out, Card c){
 	out << "(" << c.rank << ", " << c.suite << ")";
 	return out;
@@ -127,7 +140,7 @@ int PA = 7;
 int ON = 8;
 
 
-map<vector<Card>, pair<int, pair<vector<Card> ,vector<Card> > > > mem;
+map<vector<Card>, pair<int, pair<vector<Card> ,vector<Card> > >, HandComp> mem;
 
 int get_type(vector<Card> v, vector<Card>& in, vector<Card>& out){
 	if(mem.count(v)){
@@ -138,7 +151,7 @@ int get_type(vector<Card> v, vector<Card>& in, vector<Card>& out){
 	in.clear();
 	out.clear();
 
-	vector<int> got(ACE+1, false);
+	vector<int> got(ACE+1, 0);
 	vector<vector<Card> > gots(ACE+1);
 	foreach(it, v){
 		got[it->rank]++;
@@ -149,6 +162,8 @@ int get_type(vector<Card> v, vector<Card>& in, vector<Card>& out){
 
 	bool straight = false;
 	for(int i = 0; i <= ACE; i++){
+		if(i > ACE - 4 && i != ACE)
+			continue;
 		bool ok = true;
 		vector<Card> vec;
 		rep(k, 5){
@@ -167,6 +182,7 @@ int get_type(vector<Card> v, vector<Card>& in, vector<Card>& out){
 	set<int> suites;
 	foreach(it, v)
 		suites.insert(it->suite);
+
 
 	if(straight && sz(suites) == 1){
 		in = straight_vec;
@@ -326,9 +342,7 @@ vector<Card> get_best(vector<Card> hand, vector<Card> shared){
 	assert(sz(all) == 7);
 
 	vector<Card> best = shared;
-	rep(a, 7) rep(b,7) if(b != a) rep(c, 7) if(c != a && c != b)
-	rep(d, 7) if(d != c && d != b && d != a)
-	rep(e,7) if(e != d && e != c && e != b && e != a) {
+	rep(a, 7) For(b,a+1,7) For(c,b+1,7) For(d,c+1, 7) For(e, d+1, 7){
 		vector<Card> act;
 		act.pb(all[a]); act.pb(all[b]); act.pb(all[c]); act.pb(all[d]); act.pb(all[e]);
 		if(comp(act, best))
@@ -355,7 +369,6 @@ int main(){
 				me.pb(Card(s));
 			}
 			best.pb(mp(get_best(me, shared), i));
-			//cout << get_best(me, shared) << endl;
 		}
 
 		sort(best.begin(), best.end(), comp2);
@@ -407,6 +420,8 @@ while(1){
 		v2.pb(Card(s));
 	}
 	cout << endl;
+
+	cout << v1 << " " << v2 << endl;
 
 	cout << comp(v1, v2) << " " << comp(v2,v1) << endl;
 }
