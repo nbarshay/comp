@@ -326,9 +326,7 @@ vector<Card> get_best(vector<Card> hand, vector<Card> shared){
 	assert(sz(all) == 7);
 
 	vector<Card> best = shared;
-	rep(a, 7) rep(b,7) if(b != a) rep(c, 7) if(c != a && c != b)
-	rep(d, 7) if(d != c && d != b && d != a)
-	rep(e,7) if(e != d && e != c && e != b && e != a) {
+	rep(a,7) For(b,a+1,7) For(c,b+1,7) For(d,c+1,7) For(e, d+1,7){
 		vector<Card> act;
 		act.pb(all[a]); act.pb(all[b]); act.pb(all[c]); act.pb(all[d]); act.pb(all[e]);
 		if(comp(act, best))
