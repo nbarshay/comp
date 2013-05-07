@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -34,8 +36,15 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
-
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -62,8 +71,17 @@ ostream& operator<<(ostream& out, map<A,B> m){
 	return out;
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
-
+int main(){
+	const int N = 200000, M = 200000;
+	cout << N << " " << M << endl;
+	rep(i,N)
+		cout << i+1 << " ";
+	cout << endl;
+	rep(i,M){
+		int a = (rand() % N) + 1;
+		int b = (rand() % N) + 1;
+		if(a > b)
+			swap(a,b);
+		cout << a << " " << b << endl;
 	}
-};
+}	

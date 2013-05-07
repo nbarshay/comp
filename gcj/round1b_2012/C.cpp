@@ -35,41 +35,52 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, vector<T> v){
-	out << "[";
+typedef vector<int> Vi;
+typedef vector<vector<int> > Vvi;
+typedef vector<string> Vs;
+typedef pair<int, int> Pi;
+
+typedef long long ll;
+
+#define MAXN 500
+
+map<ll, vector<int> > m;
+vector<ll> A;
+
+void show(vector<int> v){
 	rep(i, sz(v)){
-		if(i) out << ", ";
-		out << v[i];
+		if(i) cout << " ";
+		cout << A[v[i]];
 	}
-	out << "]";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
-	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
-	}
-	out << "}";
-	return out;
+	cout << endl;
 }
 
 int main(){
+int np; cin>>np;
+rep(tp,np){
+	int n; cin>>n;
+	used.clear();
+	m.clear();
+	A = vector<ll>(n);
+	rep(i,n)
+		cin >> A[i];
+	while(1){
+		vector<int> hit;
+		ll sum = 0;
+		rep(i, 6){
+			int idx = rand() % n;
+			hit.pb(idx);
+			sum += A[idx];
+		}
+
+		if(m.count(sum) && m[sum] != hit){
+			printf("Case #%d:\n", tp+1);
+			show(m[sum]);
+			show(hit);
+			break;
+		} else{
+			m[sum] = hit;
+		}
+	}
+}
 }	

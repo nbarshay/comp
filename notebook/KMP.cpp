@@ -35,41 +35,55 @@ using namespace std;
 #define F first
 #define S second
 
+typedef vector<int> Vi;
+typedef vector<vector<int> > Vvi;
+typedef vector<string> Vs;
+typedef pair<int, int> Pi;
+
 template<class T>
 ostream& operator<<(ostream& out, vector<T> v){
 	out << "[";
 	rep(i, sz(v)){
-		if(i) out << ", ";
+		if(i) cout << ", ";
 		out << v[i];
 	}
 	out << "]";
 	return out;
 }
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
+
+//find first copy of s in t, and return index, -1 otherwise
+int match(string S, string T){
+	vector<int> F(sz(S)+1);	
+	int at = 0;
+	For(i,2,sz(S)){
+		while(at > 0 && S[i-1] != S[at])
+			at = F[at];
+		if(S[i-1] == S[at])
+			F[i] = ++at;
 	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
+
+	cout << F << endl;
+	
+	at = 0;
+	rep(i,sz(T)){
+		while(at > 0 && S[at] != T[i])
+			at = F[at];
+		if(S[at] == T[i]){
+			at++;
+			cout << at << endl;
+			if(at == sz(S)){
+				return i - sz(S) + 1;
+			}
+		}
 	}
-	out << "}";
-	return out;
+	return -1;
 }
 
 int main(){
+	while(1){
+		string S,T;
+		cin >> S >> T;
+		cout << match(S,T) << endl;
+	}
 }	
+

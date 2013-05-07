@@ -33,37 +33,41 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
+typedef long long ll;
+typedef vector<int> VI;
+typedef vector<vector<int> > VVI;
+typedef vector<string> VS;
+typedef pair<int, int> PI;
 
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
+
+int main(){
+int np; cin>>np;
+rep(tp,np){
+	int n; cin>>n;
+	vector<string> v(n);
+	vector<int> len(n);
+	rep(i,n){
+		cin >> v[i];
+		len[i] = -1;
+		rep(k,n) if(v[i][k] == '1')
+			len[i] = k;
 	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
+	vector<bool> used(n);
+	int res = 0;
+	rep(i,n){
+		int cnt = 0;
+		rep(k,n) if(!used[k]){
+			if(len[k] <= i){
+				used[k] = true;
+				break;
+			} else{
+				cnt++;
+			}
+		}
+		res += cnt;
 	}
-	out << "}";
-	return out;
+	printf("Case #%d: %d\n", tp+1, res);
+
+}
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
-
-	}
-};

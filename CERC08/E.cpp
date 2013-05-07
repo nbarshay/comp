@@ -5,13 +5,11 @@
 #include <assert.h>
 using namespace std;
 
-#define IT(c) typeof((c).begin())
-#define For(i, a, b) for(int (i) =  int(a); i < int(b); ++i)
-#define rep(x, n) For(x,0,n)
-#define foreach(i, c) for(IT(c) i = (c).begin(); i != (c).end(); ++i)
-
-#define sz(a) int((a).size())
+#define For(i,a,b) for(int i=a;i<b;i++)
+#define rep(i,x) For(i,0,x)
+#define foreach(i,c) for(typeof((c).begin()) i = (c).begin(); i!=(c).end(); ++i)
 #define pb push_back
+#define sz(x) ((int)(x).size())
 
 
 vector<vector<int> > A;
@@ -113,3 +111,4 @@ rep(cas, cases){
 	cout << (res ? "YES" : "NO") << endl;
 }
 }	
+

@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -34,8 +36,15 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
-
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -59,11 +68,40 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
+int main(){
+int len, n;
+while(cin >> len >> n){
+	int fall_left = 0;
 
+	vector<pair<int,char> > v;
+	vector<int> pos;
+	rep(i,n){
+		int t; cin>>t;
+		pos.pb(t);
+		char c; cin>>c;
+		int dist = (c == 'L') ? t : len - t;
+		if(c== 'L')
+			fall_left++;
+
+		v.pb(mp(dist, c));
 	}
-};
+	sort(pos.begin(), pos.end());
+	sort(v.begin(), v.end());
+	reverse(v.begin(), v.end());
+	printf("The last ant will fall down in %d seconds - started at ", v[0].F);
+	if(n > 1 && v[1].F == v[0].F)
+		printf("%d and %d.\n", pos[fall_left-1], pos[fall_left]);
+	else{
+		int ans;
+		if(v[0].S == 'L'){
+			ans = pos[fall_left-1];
+		} else{
+			ans = pos[fall_left];
+		}
+		printf("%d.\n", ans);
+	}
+}
+}	

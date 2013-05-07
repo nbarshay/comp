@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -34,8 +36,15 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
-
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -62,8 +71,44 @@ ostream& operator<<(ostream& out, map<A,B> m){
 	return out;
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
-
+int main(){
+	int N; cin>>N;
+	vector<int> A(2*N-1);
+	rep(i, 2*N-1)
+		cin >> A[i];
+	if(N % 2){
+		int res = 0;
+		rep(i, sz(A))
+			res += abs(A[i]);
+		cout << res << endl;
+	} else{
+		sort(A.begin(), A.end());
+		int neg = 0;
+		rep(i, sz(A))
+			if(A[i] < 0)
+				neg++;
+		int ans = -1000000000;
+		rep(k,2){
+			vector<int> B = A;
+			bool bad = false;
+			if(k){
+				rep(i, (neg/2)*2)
+					B[i] = -B[i];
+			} else{
+				rep(i, ((neg+1)/2)*2){
+					if(i < sz(A))
+						B[i] = -B[i];
+					else
+						bad = true;
+				}
+			}
+			if(!bad){
+				int res = 0;	
+				rep(i, sz(A))
+					res += B[i];
+				ans = max(ans, res);
+			}
+		}
+		cout << ans << endl;
 	}
-};
+}	

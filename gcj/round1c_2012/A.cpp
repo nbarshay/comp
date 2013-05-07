@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -33,37 +35,49 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
+typedef vector<int> Vi;
+typedef vector<vector<int> > Vvi;
+typedef vector<string> Vs;
+typedef pair<int, int> Pi;
 
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
+
+vector<vector<int> > adj;
+vector<bool> vis;
+bool bad;
+
+void dfs(int at){
+	if(vis[at]){
+		bad = true;
+	}else{
+		vis[at] = true;
+		foreach(it, adj[at])
+			dfs(*it);
 	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
-	}
-	out << "}";
-	return out;
+
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
 
+int main(){
+int np; cin>>np;
+rep(tp,np){
+	int n; cin>>n;
+	adj = vector<vector<int> >(n);
+	rep(i,n){
+		int t; cin>>t;
+		rep(k,t){
+			int a; cin>>a;
+			a--;
+			adj[i].pb(a);
+		}
 	}
-};
+	
+	bad = false;
+	rep(i,n){
+		vis = vector<bool>(n, false);
+		dfs(i);
+	}
+	
+	printf("Case #%d: %s\n", tp+1, bad ? "Yes" : "No");
+}
+}	
+

@@ -33,37 +33,14 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
+typedef long long ll;
+typedef vector<int> VI;
+typedef vector<vector<int> > VVI;
+typedef vector<string> VS;
+typedef pair<int, int> PI;
 
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
-	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
-	}
-	out << "}";
-	return out;
+
+int main(){
+
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
-
-	}
-};

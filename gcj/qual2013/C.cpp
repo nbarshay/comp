@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -33,37 +35,33 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
+typedef vector<int> Vi;
+typedef vector<vector<int> > Vvi;
+typedef vector<string> Vs;
+typedef pair<int, int> Pi;
 
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
+typedef long long ll;
+
+bool isPal(ll v){
+	vector<ll> d;
+	while(v){
+		d.pb(v % 10);
+		v /= 10;
 	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
-	}
-	out << "}";
-	return out;
+	for(ll i=0, j=sz(d)-1; i < j; i++,j--)
+		if(d[i] != d[j])
+			return false;
+	return true;
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
+bool check(ll v){
+	if(isPal(v) && isPal(v*v))
+		return true;
+}
 
-	}
-};
+int main(){
+	rep(i, 1000000000)
+		if(check(i))
+			cout << i << endl;
+}	
+

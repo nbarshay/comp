@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -34,8 +36,15 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
-
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -59,11 +68,37 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
+vector<int> proc(string s){
+	vector<int> v;
+	rep(i, sz(s)) if(s[i] == 'b')
+		v.pb(i);
+	return v;
+}
 
-	}
-};
+void no(){
+	cout << "NO" << endl;
+	exit(0);
+}
+
+void yes(){
+	cout << "YES" << endl;
+	exit(0);
+}
+
+int main(){
+	int n; cin>>n;
+	string s, t; cin>>s>>t;
+	vector<int> a = proc(s); vector<int> b = proc(t);
+	if(sz(a) != sz(b))
+		no();
+	int bal = 0;
+	rep(i, sz(a))
+		bal += a[i] - b[i];
+	if(bal == 0)
+		yes();
+	else
+		no();
+}	

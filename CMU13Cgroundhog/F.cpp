@@ -6,6 +6,8 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <bitset>
+#include <functional>
 #include <numeric>
 #include <utility>
 #include <sstream>
@@ -15,10 +17,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <queue>
 #include <cstring>
 #include <stack>
 #include <assert.h>
-#include <list>
 using namespace std;
 
 #define IT(c) typeof((c).begin())
@@ -34,8 +36,15 @@ using namespace std;
 #define S second
 
 template<class T>
-ostream& operator<<(ostream& out, const vector<T>& vec);
-
+ostream& operator<<(ostream& out, vector<T> v){
+	out << "[";
+	rep(i, sz(v)){
+		if(i) out << ", ";
+		out << v[i];
+	}
+	out << "]";
+	return out;
+}
 template<class A, class B>
 ostream& operator<<(ostream& out, pair<A,B> p){
 	out << "<" << p.F << ", " << p.S << ">";
@@ -59,11 +68,40 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
-struct $CLASSNAME${
-	$RETURNTYPE$ $METHODNAME$($METHODPARAMS$){
+int main(){
+	int n,f; cin>>n>>f;	
+	vector<string> V(n);
+	rep(i,n)
+		cin >> V[i];
+	vector<int> rows;
 
+	rep(i,n){
+		bool got = false;
+		rep(k,n) 
+			if(V[i][k] == 'x')
+				got = true;
+		if(got)
+			rows.pb(i);
 	}
-};
+
+	rep(ridx, sz(rows)){
+		int r = rows[ridx];
+		int cnt = 0;
+		vector<int> pos;
+		rep(c,n) if(V[r][c] == 'x')
+			pos.pb(c);
+		int need = min(sz(pos), f);
+		int lowr = ridx == 0 ? 0 : rows[ridx-1] + 1; int highr = (need == f) ? n-1 : r;
+		rep(i, need){
+			int lowc = (i == 0) ? 0 : pos[i-1] + 1;
+			int highc = (i == need-1) ? (n-1) : pos[i];
+			//cout << lowr << " " << highr << " " << lowc << " " << highc << endl;
+			cout << (lowc) << " " << (n - highr - 1) << " " << (highc + 1) << " " << (n - lowr) << endl;
+		}
+		f -= need;
+	}
+	assert(f == 0);
+}	
