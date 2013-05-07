@@ -68,7 +68,7 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-
+	return out;
 }
 
 int main(){
