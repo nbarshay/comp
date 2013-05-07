@@ -116,6 +116,12 @@ rep(tp,np){
 			break;
 		}
 	}
+	
+	/*
+	rep(j,n) rep(i,n) rep(k,n)
+		if(inf[i][j] && inf[j][k])
+			inf[i][k] = true;
+	*/
 
 	inf_vary = vector<bool>(n, false);
 	rep(i,n) rep(j,n) if(inf[i][j] && inf[j][i] && i != j)
@@ -129,8 +135,9 @@ rep(tp,np){
 	rep(i,n) rep(j,n) if(does_vary[j] && adj[i][j])
 		does_vary[i] = true;
 
-	//cout << is_inf << endl;
+	cout << is_inf << endl;
 	//cout << does_vary << endl;
+	cout << inf_vary << endl;
 
 	mem = vector<int>(n, -1);
 	cout << (isStatic(0) ? "YES" : "NO") << endl;	

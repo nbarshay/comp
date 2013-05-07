@@ -221,4 +221,4 @@ while(cin >> N >> R){
 	assert(dp.count(mp(0, 0)));
 	cout << dp[mp(0,0)] + base_cost << endl;
 }
-}	
+}
