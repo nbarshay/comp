@@ -68,8 +68,12 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
 int main(){
+	cout << 1 << endl;
+	rep(i,550)
+		cout << "codejam";
+	cout << endl;
 }	

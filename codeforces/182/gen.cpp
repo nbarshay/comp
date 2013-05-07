@@ -72,4 +72,16 @@ ostream& operator<<(ostream& out, map<A,B> m){
 }
 
 int main(){
+	const int N = 200000, M = 200000;
+	cout << N << " " << M << endl;
+	rep(i,N)
+		cout << i+1 << " ";
+	cout << endl;
+	rep(i,M){
+		int a = (rand() % N) + 1;
+		int b = (rand() % N) + 1;
+		if(a > b)
+			swap(a,b);
+		cout << a << " " << b << endl;
+	}
 }	

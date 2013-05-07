@@ -68,8 +68,54 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
+const int MAXD = 105;
+const int MAXL = 1005;
+
+int n,m;
+bool V[MAXD][MAXD][MAXL];
+string s;
+vector<string> B;
+
+int dr[4] = {1,-1,0,0};
+int dc[4] = {0,0,1,-1};
+
+bool rec(int r, int c, int loc){
+	if(loc == sz(s))
+		return true;
+	if(r < 0 || c < 0 || r >=n || c >= m || B[r][c] != s[loc])
+		return false;
+	if(V[r][c][loc])
+		return false;
+	V[r][c][loc] = true;
+	rep(d,4){
+		if(rec(r+dr[d], c+dc[d], loc+1))
+			return true;
+	}
+	return false;
+}
+
+
 int main(){
+	cin >> n >> m;
+	rep(i, n){
+		string t; cin >> t;
+		assert(sz(t) == m);
+		B.pb(t);
+	}
+	int t; cin>>t;
+	rep(i,t){
+		cin >> s;
+		rep(i, n) rep(k,m) rep(j, sz(s) + 2)
+			V[i][k][j] = false;
+		bool got = false;
+		rep(i,n) rep(k,m){
+			if(rec(i,k,0))
+				got = true;
+		}
+		cout << (got ? "YES" : "NO") << endl;
+	}
+
 }	

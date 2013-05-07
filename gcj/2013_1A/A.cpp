@@ -68,8 +68,35 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
+}
+
+typedef long long ll;
+
+bool safeMul(ll a, ll b, ll& c){
+	c = a*b;
+	if(a != 0 && c / a != b){
+		return false;
+	}
+	return true;
 }
 
 int main(){
+int cases; cin>>cases;
+rep(cas, cases){
+	ll rad, paint; cin>>rad>>paint;
+	ll a = 1, b = 4*707106780LL + 5;
+	while(a != b){
+		ll m = (a+b+1)/2;
+		ll a1 = 2*rad + 1;
+		ll a2 = 2*rad + 1 + 4*(m-1);
+		ll res;
+		bool safe = safeMul(m, a1+a2, res);
+		if(!safe || res/2 > paint)
+			b = m-1;
+		else
+			a = m;
+	}
+	printf("Case #%d: %lld\n", cas+1, a);
+}
 }	

@@ -68,8 +68,39 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
 int main(){
+	int t, n, p; cin >> t >> n >> p;
+	vector<int> T(n);
+	rep(i,n){
+		cin >> T[i];
+		T[i]--;
+	}
+	vector<int> M(n, 0);
+	vector<int> S(t,0);
+	rep(i, p){
+		int a,b; char c; cin>>a>>b>>c;
+		a--; b--;
+		if(c == 'M')
+			M[a]++;
+		else{
+			if(M[a] < 4){
+				S[T[a]]++;
+				S[T[b]]--;
+			} 
+			M[a] = 0;
+		}
+	}
+	int best = -1;
+	rep(i, t) best = max(best, S[i]);
+	if(S[T[0]] == best){
+		cout << ":)" << endl;
+		cout << best << endl;
+	}
+	else{
+		cout << ":(" << endl;
+		cout << best - S[T[0]] << endl;
+	}
 }	

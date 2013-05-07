@@ -71,5 +71,57 @@ ostream& operator<<(ostream& out, map<A,B> m){
 	return out;
 }
 
+struct Node{
+	int a,b;
+	Node *left, *right;
+	int cnt;
+	Node (int _a, int _b){
+		a = _a, b = _b;	
+		cnt = 0;
+		if(a == b){
+			left = right = NULL;
+		} else{
+			int m = (a+b+1)/2;
+			left = new Node(a, m-1);
+			right = new Node(m,b);
+		}
+	}
+
+	void insert(int head, int tail){
+		if(head >= a && head <= b && tail >= a && tail <= b){
+			cnt++;
+			if(left && right){
+				left->insert(head, tail);
+				right->insert(head, tail);
+			}
+		}
+	}
+
+	int get(int low, int high){
+		if(low <= a && high >= b){
+			return cnt;
+		} else if(high < a || low > b){
+			return 0;
+		} else{
+
+		}
+	}
+}
+
 int main(){
+	int N,M; cin>>N>>M;
+	vector<int> perm(N);
+	vector<int> loc(N+1);
+	rep(i,N){
+		cin >> perm[i];
+		loc[perm[i]] = i;
+	}
+	int res = 0;
+	For(i,1,N+1){
+		for(int k = i; k <= N; k+= i)
+			res++;
+	}
+	cout << res << endl;
+		
+			
 }	

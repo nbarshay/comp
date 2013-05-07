@@ -1,3 +1,4 @@
+#define _GLIBCXX_DEBUG
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,41 +36,31 @@ using namespace std;
 #define F first
 #define S second
 
-template<class T>
-ostream& operator<<(ostream& out, vector<T> v){
-	out << "[";
-	rep(i, sz(v)){
-		if(i) out << ", ";
-		out << v[i];
-	}
-	out << "]";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, pair<A,B> p){
-	out << "<" << p.F << ", " << p.S << ">";
-	return out;
-}
-template<class T>
-ostream& operator<<(ostream& out, set<T> s){
-	out << "(";
-	foreach(it, s){
-		if(it != s.begin()) out << ", ";
-		out << *it;
-	}
-	out << ")";
-	return out;
-}
-template<class A, class B>
-ostream& operator<<(ostream& out, map<A,B> m){
-	out << "{";
-	foreach(it, m){
-		if(it != m.begin()) out << ", ";
-		out << *it;
-	}
-	out << "}";
-	return out;
+
+vector<vector<int> > adj;
+vector<int> dist;
+
+
+void dfs(int at, int from, int d){
+	dist[at] = d;
+	for(int to : adj[at]) if(to != from)
+		dfs(to, at, d+1);
 }
 
 int main(){
+	int N; cin>>N;
+	adj = vector<vector<int> >(N);
+	dist = vector<int>(N);
+	rep(i, N-1){
+		int a,b; cin>>a>>b;
+		a--; b--;
+		adj[a].pb(b);
+		adj[b].pb(a);
+	}
+	dfs(0,-1,0);
+	double res = 0.0;
+	rep(i, N){
+		res += 1.0/(dist[i]+1);
+	}
+	cout << fixed << setprecision(8) << res << endl;
 }	

@@ -68,8 +68,37 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
+}
+
+vector<int> proc(string s){
+	vector<int> v;
+	rep(i, sz(s)) if(s[i] == 'b')
+		v.pb(i);
+	return v;
+}
+
+void no(){
+	cout << "NO" << endl;
+	exit(0);
+}
+
+void yes(){
+	cout << "YES" << endl;
+	exit(0);
 }
 
 int main(){
+	int n; cin>>n;
+	string s, t; cin>>s>>t;
+	vector<int> a = proc(s); vector<int> b = proc(t);
+	if(sz(a) != sz(b))
+		no();
+	int bal = 0;
+	rep(i, sz(a))
+		bal += a[i] - b[i];
+	if(bal == 0)
+		yes();
+	else
+		no();
 }	

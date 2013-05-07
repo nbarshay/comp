@@ -68,8 +68,31 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
 int main(){
+int cases; cin>>cases;
+rep(cas, cases){
+	long long A;
+	int N;
+	cin>>A>>N;
+	vector<long long> vec(N);
+	rep(i,N)
+		cin >> vec[i];
+	sort(vec.begin(), vec.end());
+	int cost = 0;
+	int res = N;
+	if(A != 1){
+		rep(i, N){
+			while(A <= vec[i]){
+				cost++;
+				A += (A-1);
+			}
+			A += vec[i];
+			res = min(res, cost + N-i - 1);
+		}
+	}
+	printf("Case #%d: %d\n", cas+1, res);
+}
 }	

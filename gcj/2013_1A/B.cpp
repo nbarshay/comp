@@ -68,8 +68,48 @@ ostream& operator<<(ostream& out, map<A,B> m){
 		out << *it;
 	}
 	out << "}";
-	return out;
+
 }
 
+typedef long long ll;
+
 int main(){
+int cases; cin>>cases;
+rep(cas, cases){
+	ll e, r;
+	int n; 
+	cin>>e>>r>>n;
+	vector<pair<ll,int> > V(n);
+	rep(i,n){
+		ll t; cin>>t;
+		V[i] = mp(t,i);
+	}
+	vector<ll> E(n, e);
+	vector<ll> R(n,r);
+	vector<bool> S(n,false);
+	sort(V.begin(), V.end(), greater<pair<ll,int> >());
+	ll res = 0;
+	for(auto it : V){
+		ll val = it.F, idx = it.S;
+		res += val*E[idx];	
+
+		S[idx] = true;
+
+		ll need = E[idx];
+		for(int at = idx - 1; at >= 0; at--){
+			ll take = min(need, R[at]);
+			R[at] -= take; need -= take;
+			
+			E[at] -= need;
+		}
+
+		E[idx] = 0;
+		for(int at = idx+1; at < n; at++){
+			if(S[at])
+				break;
+			E[at] = min(E[at-1] + R[at-1], E[at]);
+		}
+	}
+	printf("Case #%d: %lld\n", cas+1, res);
+}
 }	

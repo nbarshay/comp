@@ -72,4 +72,43 @@ ostream& operator<<(ostream& out, map<A,B> m){
 }
 
 int main(){
+	int N; cin>>N;
+	vector<int> A(2*N-1);
+	rep(i, 2*N-1)
+		cin >> A[i];
+	if(N % 2){
+		int res = 0;
+		rep(i, sz(A))
+			res += abs(A[i]);
+		cout << res << endl;
+	} else{
+		sort(A.begin(), A.end());
+		int neg = 0;
+		rep(i, sz(A))
+			if(A[i] < 0)
+				neg++;
+		int ans = -1000000000;
+		rep(k,2){
+			vector<int> B = A;
+			bool bad = false;
+			if(k){
+				rep(i, (neg/2)*2)
+					B[i] = -B[i];
+			} else{
+				rep(i, ((neg+1)/2)*2){
+					if(i < sz(A))
+						B[i] = -B[i];
+					else
+						bad = true;
+				}
+			}
+			if(!bad){
+				int res = 0;	
+				rep(i, sz(A))
+					res += B[i];
+				ans = max(ans, res);
+			}
+		}
+		cout << ans << endl;
+	}
 }	
