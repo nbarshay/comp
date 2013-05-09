@@ -77,7 +77,7 @@ const int MAXP = 71;
 vector<int> primes;
 const int P = 19;
 
-int getVec(int x){
+pair<int,int> getVec(int x){
 	int res = 0;
 	rep(i, P){
 		while((x % primes[i]) == 0){
@@ -85,9 +85,7 @@ int getVec(int x){
 			x /= primes[i];
 		}
 	}
-	if(x != 1)
-		return -1;
-	return res;
+	return mp(res, x);	
 }
 
 typedef __int128_t int128;
@@ -119,12 +117,8 @@ int main(){
 		if(ok)
 			primes.pb(i);
 	}
+	cout << primes << endl;
 	assert(sz(primes) == P);
-
-	int sigs[MAXN];
-	For(i,1,MAXN)
-		sigs[i] = getVec(i);
-
 
 	int a,b;
 	while(cin >> a >> b){
@@ -135,23 +129,42 @@ int main(){
 				small_square = hit;
 		}
 
-		memset(dp,-1,sizeof(dp));
+		map<int, vector<int> > dup;
+		vector<int> opts;
 		For(at, a, b+1){
-			/*
-			if(small_square != -1 && at*at >= small_square)
-				break;
-			*/
-			int sig = sigs[at];
-			if(sig == -1)
-				continue;
-			assert(sig != 0);
+			pair<int,int> hit = getVec(at);
+			if(hit.S == 1)
+				opts.pb(at);
+			else {
+				assert(hit.S >= 71);
+				dup[hit.S].pb(at);
+			}
+		}
+		foreach(it, dup){
+			vector<int>& cur = it->S;
+			rep(i, sz(cur)) For(k,i+1, sz(cur)){
+				opts.pb(cur[i]*cur[k]);
+				cout << cur[i] << " " << cur[k] << endl;
+			}
+		}
+		
+		sort(opts.begin(), opts.end());
 
+		memset(dp,-1,sizeof(dp));
+		foreach(it, opts){
+			int& at = *it;
+
+			if(small_square != -1 && at >= small_square)
+				break;
+
+			int sig = getVec(at).F;
+			
 			memcpy(n_dp, dp, sizeof(dp));
 
 			for(int i = TWO(P)-1; i >= 1; i--) if(dp[i] >= 0){
 				assert(dp[i] > 1);
 				int next = i ^ sig;
-				if(n_dp[next] == -1 || (dp[i]*at) < dp[next]){
+				if(n_dp[next] == -1 || (dp[i]*at) < n_dp[next]){
 					n_dp[next] = dp[i]*at;
 				}
 			}
@@ -169,6 +182,12 @@ int main(){
 			if(res == -1 || dp[0] < res)
 				res = dp[0];
 		}
+
+		cout << getVec(3976) << " " << getVec(4047) << endl;
+		int sig = getVec(3976).F ^ getVec(4047).F;
+		cout << sig << endl;
+		assert(dp[sig] >= 0);
+		cout << sqrt(dp[sig]*3976*4047) << endl;
 
 		//cout << "HEY: " << (long long)dp[0] << endl;
 		//cout << small_square << endl;
