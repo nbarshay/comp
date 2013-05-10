@@ -4,8 +4,10 @@
 using namespace std;
 
 const int MAXV = 3000000;
+//!!!MAXE MUST BE DOUBLE NUMBER OF EDGES!!!
 const int MAXE = 2 * 30000000;
-const int INF = 1000000005, CAPINF = 1000000005;
+const int INF = 1000000005;
+const int CAPINF = 1000000005;
 
 template <typename T> struct Dinic
 {

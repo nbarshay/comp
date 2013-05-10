@@ -104,10 +104,14 @@ long long sqrt(int128 v){
 	return (long long) a;
 }
 
-int128 dp[TWO(P)];
-int128 n_dp[TWO(P)];
+int128 dist[TWO(P)];
+set<int> path[TWO(P)];
 
 const int MAXN = 5000;
+
+bool safe_mul(int128 a, int128 b){
+	return (a*b)/b == a;
+}
 
 int main(){
 	For(i,2,MAXP){
@@ -117,18 +121,10 @@ int main(){
 		if(ok)
 			primes.pb(i);
 	}
-	cout << primes << endl;
 	assert(sz(primes) == P);
 
 	int a,b;
 	while(cin >> a >> b){
-		int small_square = -1;
-		for(int i = 5000; i>= 1; i--){
-			int hit = i*i;
-			if(hit >= a && hit <= b)
-				small_square = hit;
-		}
-
 		map<int, vector<int> > dup;
 		vector<int> opts;
 		For(at, a, b+1){
@@ -144,57 +140,74 @@ int main(){
 			vector<int>& cur = it->S;
 			rep(i, sz(cur)) For(k,i+1, sz(cur)){
 				opts.pb(cur[i]*cur[k]);
-				cout << cur[i] << " " << cur[k] << endl;
 			}
 		}
-		
-		sort(opts.begin(), opts.end());
 
-		memset(dp,-1,sizeof(dp));
-		foreach(it, opts){
-			int& at = *it;
+		vector<int> cache(sz(opts));
+		rep(i, sz(opts)){
+			cache[i] = getVec(opts[i]).F;
+		}
 
-			if(small_square != -1 && at >= small_square)
+
+		//TODO: not necessary?
+		rep(i, TWO(P)){
+			path[i].clear();
+			dist[i] = -1;
+		}
+
+		typedef pair<int128, int> State;
+		priority_queue<State,vector<State>, greater<State> > pq;
+		rep(i, sz(opts)){
+			int sig = cache[i];
+			if(dist[sig] == -1 || opts[i] < dist[sig]){
+				dist[sig] = opts[i];
+				pq.push(mp(opts[i], sig));
+				path[sig].clear();
+				path[sig].insert(i);
+			}
+		}
+		int128 res = -1;
+		while(!pq.empty()){
+			int128 num = pq.top().F;
+			int sig = pq.top().S;
+			pq.pop();
+			if(num > dist[sig])
+				continue;
+
+			if(res != -1 && num >= res){
 				break;
-
-			int sig = getVec(at).F;
+			}
+			if(sig == 0){
+				res = num;
+				break;
+			}
 			
-			memcpy(n_dp, dp, sizeof(dp));
+			set<int> freeze = path[sig];
+			rep(i, sz(opts)) if(!freeze.count(i)){
+				int to_sig = sig ^ cache[i];
+				if(safe_mul(num, opts[i])){
+					int128 to_num = num*opts[i];
+					if(dist[to_sig] != -1){
+						if(safe_mul(to_num, dist[to_sig])){
+							if(res == -1 || to_num*dist[to_sig] < res)
+								res = to_num*dist[to_sig];
+						}
+					}
+					if(dist[to_sig] == -1 || to_num < dist[to_sig]){
+						dist[to_sig] = to_num;
+						pq.push(mp(to_num, to_sig));
 
-			for(int i = TWO(P)-1; i >= 1; i--) if(dp[i] >= 0){
-				assert(dp[i] > 1);
-				int next = i ^ sig;
-				if(n_dp[next] == -1 || (dp[i]*at) < n_dp[next]){
-					n_dp[next] = dp[i]*at;
+						path[to_sig] = freeze;
+						path[to_sig].insert(i);
+					}
 				}
 			}
-			if(n_dp[sig] == -1 || at < n_dp[sig]){
-				n_dp[sig] = at;
-			}
-
-			memcpy(dp, n_dp, sizeof(dp));
 		}
-
-		int128 res = -1;
-		if(small_square != -1)
-			res = small_square;
-		if(dp[0] != -1){
-			if(res == -1 || dp[0] < res)
-				res = dp[0];
-		}
-
-		cout << getVec(3976) << " " << getVec(4047) << endl;
-		int sig = getVec(3976).F ^ getVec(4047).F;
-		cout << sig << endl;
-		assert(dp[sig] >= 0);
-		cout << sqrt(dp[sig]*3976*4047) << endl;
-
-		//cout << "HEY: " << (long long)dp[0] << endl;
-		//cout << small_square << endl;
 		if(res == -1)
 			cout << "none" << endl;
 		else
 			cout << sqrt(res) << endl;
+
 	}
 	
 }	
